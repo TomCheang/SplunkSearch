@@ -63,14 +63,8 @@ function New-SplunkSearch {
     Suspend-CertificateValidationForSelfSignedSSL
 
     if (-not $Credential) {
-      # if Credential not provide, try to populate username with non-admin acct
-      $emp_num = Get-ADUser -Identity $env:UserName -Properties EmployeeNumber |
-        select @{n='usr_num';e={$_.EmployeeNumber -replace '999999'}} |
-        select -ExpandProperty usr_num
-
-      $usr = Get-ADUser -Filter {EmployeeNumber -eq $emp_num}
       $splSplunkCred = @{
-        Username = $usr.SamAccountName
+        Username = $env:Username
         Message = 'Enter Splunk creds.'
       }
       $Credential = Get-Credential @splSplunkCred
